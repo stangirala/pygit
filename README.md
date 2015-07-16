@@ -9,5 +9,3 @@ Goals
 
 Stuff Implemented So Far
 ----
-* git add
-* git diff

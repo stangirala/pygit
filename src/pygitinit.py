@@ -1,14 +1,6 @@
 import os
 import errno
-
-def write_object_to_file(out_file, obj):
-  serialized = base64.encodestring(zlib.compress(cPickle.dumps(obj, -1), 9))
-  try:
-    f = open(out_file, 'w')
-    f.write(serialized)
-  except OSError as e:
-    if e.errno == errno.ENOINT:
-      print 'Broken repo. Please reinitialize.'
+import write_object_to_file
 
 def pygitinit():
   ''' Create empty repo and other tracking data. '''
@@ -21,8 +13,11 @@ def pygitinit():
       pass
   os.chdir('.pygit')
 
-  index_dict = {}
-  write_object_to_file({})
+  try:
+    write_object_to_file.write_object_to_file({})
+  except OSError as e:
+    if e.errno == errno.ENOENT:
+      print 'Failed to create repo.'
 
   os.chdir('../')
 
