@@ -2,7 +2,7 @@ import sys
 import errn
 import utils
 
-def pygit_add(filename):
+def add(filename):
   ''' Main method to add files to the current index. '''
 
   # Load index from file, add file and write back to disk.

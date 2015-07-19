@@ -2,7 +2,7 @@ import os
 import errno
 import utils
 
-def pygitinit():
+def init():
   ''' Create empty repo and other tracking data. '''
 
   check_if_directory_exists()
