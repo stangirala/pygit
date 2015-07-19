@@ -4,6 +4,11 @@ import utils
 
 def pygitinit():
   ''' Create empty repo and other tracking data. '''
+
+  check_if_directory_exists()
+  enter_directory_and_initilize_empty_meta_data()
+
+def check_if_directory_exists():
   try:
     os.mkdir('.pygit')
   except OSError as e:
@@ -11,6 +16,8 @@ def pygitinit():
       print 'File exists. Analyzing pygit repo.'
       # Do nothing for now.
       pass
+
+def enter_directory_and_initilize_empty_meta_data():
   os.chdir('.pygit')
 
   try:
@@ -20,7 +27,3 @@ def pygitinit():
       print 'Failed to create repo.'
 
   os.chdir('../')
-
-if __name__ == '__main__':
-  pygitinit()
-
