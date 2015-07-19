@@ -1,6 +1,6 @@
 import os
 import errno
-import write_object_to_file
+import utils
 
 def pygitinit():
   ''' Create empty repo and other tracking data. '''
@@ -14,7 +14,7 @@ def pygitinit():
   os.chdir('.pygit')
 
   try:
-    write_object_to_file.write_object_to_file({})
+    utils.write_object_to_file({})
   except OSError as e:
     if e.errno == errno.ENOENT:
       print 'Failed to create repo.'
