@@ -6,7 +6,7 @@ import cPickle
 def read_object_from_file(file_name):
   try:
     with open(file_name, 'r') as fp:
-      decoded_file_string = base64.b64decode(fp)
+      decoded_file_string = base64.b64decode(fp.read())
       uncompressed_pickled_object = zlib.decompress(decoded_file_string)
       unpickled_object = cPickle.loads(uncompressed_pickled_object)
 
