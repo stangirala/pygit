@@ -29,3 +29,7 @@ def write_object_to_file(file_name, obj):
 def compute_string_hash(unhashed_string):
   ''' Simply return the same string for now. '''
   return unhashed_string
+
+def write_error_message_and_exit(message):
+  sys.stderr.write('Error: ' + message + '\n')
+  sys.exit(-1)
