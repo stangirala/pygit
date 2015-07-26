@@ -1,3 +1,4 @@
+import os
 import sys
 import zlib
 import base64
@@ -10,8 +11,8 @@ def find_pygit_repo():
       if '.pygit' in current_dir_ls:
           return os.path.abspath(current_dir)
 
-        current_dir += '/../'
-        current_dir = os.path.abspath(current_dir)
+      current_dir += '/../'
+      current_dir = os.path.abspath(current_dir)
 
       return ''
 
