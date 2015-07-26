@@ -3,6 +3,18 @@ import zlib
 import base64
 import cPickle
 
+def find_pygit_repo():
+  current_dir = os.path.abspath('./')
+  while current_dir != '/':
+      current_dir_ls = os.listdir(current_dir)
+      if '.pygit' in current_dir_ls:
+          return os.path.abspath(current_dir)
+
+        current_dir += '/../'
+        current_dir = os.path.abspath(current_dir)
+
+      return ''
+
 def read_object_from_file(file_name):
   try:
     with open(file_name, 'r') as fp:
