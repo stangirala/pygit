@@ -3,18 +3,7 @@ import sys
 import errno
 
 import utils
-
-def find_pygit_repo():
-  current_dir = os.path.abspath('./')
-  while current_dir != '/':
-    current_dir_ls = os.listdir(current_dir)
-    if '.pygit' in current_dir_ls:
-      return os.path.abspath(current_dir)
-
-    current_dir += '/../'
-    current_dir = os.path.abspath(current_dir)
-
-  return ''
+import globalVars
 
 def get_index_and_index_path(path_to_pygit_repo_index, path_to_pygit_repo_current_index):
   current_index_exists = os.path.exists(path_to_pygit_repo_current_index)
@@ -31,13 +20,13 @@ def get_index_and_index_path(path_to_pygit_repo_index, path_to_pygit_repo_curren
 def add(filename):
   ''' Main method to add files to the current index. '''
 
-  path_to_pygit_repo = find_pygit_repo()
+  path_to_pygit_repo = utils.find_pygit_repo()
   if path_to_pygit_repo == '':
     utils.write_error_message_and_exit('Cannot find pygit repo or parent repo.')
 
   path_to_pygit_repo += '/.pygit/'
-  path_to_pygit_repo_index = path_to_pygit_repo + '/index'
-  path_to_pygit_repo_current_index = path_to_pygit_repo + '/current_index'
+  path_to_pygit_repo_index = path_to_pygit_repo + '/' + globalVars.index_file_name
+  path_to_pygit_repo_current_index = path_to_pygit_repo + '/' + globalVars.current_index
 
   index_dict, index_path = get_index_and_index_path(path_to_pygit_repo_index, path_to_pygit_repo_current_index)
 
