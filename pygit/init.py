@@ -3,6 +3,8 @@ import sys
 import errno
 import utils
 
+import globalVars
+
 def init():
   ''' Create empty repo and other tracking data. '''
 
@@ -23,7 +25,8 @@ def enter_directory_and_initilize_empty_meta_data():
   os.chdir('.pygit')
 
   try:
-    utils.write_object_to_file('index', {})
+    utils.write_object_to_file(globalVars.index_file_name, {})
+    os.mkdir(globalVars.blob_object_location)
   except OSError as e:
     if e.errno == errno.ENOENT:
       sys.stderr.write('Failed to create repo.\n')
