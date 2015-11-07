@@ -6,23 +6,23 @@ import cPickle
 
 import globalVars
 
+class RepoNotFoundException(Exception):
+  pass
+
 def find_pygit_repo():
   current_dir = os.path.abspath('./')
-  count = 0
-  root_path = os.path.abspath(globalVars.root)
-  while current_dir != globalVars.root:
-    if count == 10:
-      sys.exit(-1)
+  while True:
+    if current_dir == os.path.abspath('/'):
+      sys.stderr.write('Could not find a pygit repo here.')
+      raise RepoNotFoundException()
+      return ''
     else:
-      count += 1
-    current_dir_ls = os.listdir(current_dir)
-    if '.pygit' in current_dir_ls:
-        return os.path.abspath(current_dir)
+      ls_list = os.listdir(current_dir)
+      if '.pygit' in ls_list:
+        return current_dir
 
     current_dir += '/../'
     current_dir = os.path.abspath(current_dir)
-
-  return ''
 
 def read_object_from_file(file_name):
   try:
