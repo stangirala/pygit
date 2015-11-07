@@ -15,7 +15,6 @@ def find_pygit_repo():
     if current_dir == os.path.abspath('/'):
       sys.stderr.write('Could not find a pygit repo here.')
       raise RepoNotFoundException()
-      return ''
     else:
       ls_list = os.listdir(current_dir)
       if '.pygit' in ls_list:
