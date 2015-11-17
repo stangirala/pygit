@@ -10,8 +10,8 @@ class RepoNotFoundException(Exception):
   pass
 
 def find_pygit_repo():
-  current_dir = os.path.abspath('./')
   while True:
+    current_dir = os.getcwd()
     if current_dir == os.path.abspath('/'):
       sys.stderr.write('Could not find a pygit repo here.')
       raise RepoNotFoundException()
@@ -20,8 +20,7 @@ def find_pygit_repo():
       if '.pygit' in ls_list:
         return current_dir
 
-    current_dir += '/../'
-    current_dir = os.path.abspath(current_dir)
+    os.chdir('../')
 
 def read_object_from_file(file_name):
   try:
