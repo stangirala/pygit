@@ -2,6 +2,9 @@ import tempfile
 import os
 import sys
 import shutil
+import platform
+
+from nose.tools import with_setup
 
 from pygit import utils
 from pygit import globalVars
@@ -22,34 +25,39 @@ def test_read_and_write_object_from_file():
 
   os.remove(file_path)
 
-def test_find_pygit_repo():
-  root_temp_dir = create_dir_structure_and_pygit_repos()
+def create_and_return_temporary_folder_space_for_tests():
+  if platform.system() == 'Darwin':
+    return '/private' + tempfile.mkdtemp()
 
-  # Quirk of os.path.abspath('./') that I haven't figured out yet.
-  os.chdir(root_temp_dir)
-  root_temp_dir = os.path.abspath('./')
+class TestFindPygitRepo:
+  def setup(self):
+    self.root_temp_dir = create_and_return_temporary_folder_space_for_tests()
 
-  test_pygit_repo_path = root_temp_dir + '/one/'
-  os.mkdir(test_pygit_repo_path + '.pygit')
+    os.makedirs(self.root_temp_dir + '/one/two/three')
+    os.makedirs(self.root_temp_dir + '/zero/minus_one/minus_two')
+    os.makedirs(self.root_temp_dir + '/zero/i')
+    os.makedirs(self.root_temp_dir + '/zero/reals')
 
-  os.chdir(root_temp_dir + '/one/two/three')
-  pygit_repo_path = utils.find_pygit_repo()
-  assert os.path.abspath(pygit_repo_path) == os.path.abspath(test_pygit_repo_path)
+    self.pygit_repo_path = self.root_temp_dir + '/one/'
+    os.mkdir(self.pygit_repo_path + '.pygit')
 
-  try:
-    os.chdir(root_temp_dir + '/zero/minus_one')
-    pygit_repo_path = utils.find_pygit_repo()
-  except utils.RepoNotFoundException:
-    assert True
+  def teardown(self):
+    shutil.rmtree(self.root_temp_dir)
 
-  shutil.rmtree(root_temp_dir)
+  @with_setup(setup, teardown)
+  def test_find_existing_pygit_repo(self):
+    os.chdir(self.root_temp_dir + '/one/two/three')
+    discovered_pygit_repo_path = utils.find_pygit_repo()
+    assert os.path.abspath(discovered_pygit_repo_path) == os.path.abspath(self.pygit_repo_path)
 
-def create_dir_structure_and_pygit_repos():
-  root_temp_dir = tempfile.mkdtemp()
+    os.chdir(self.root_temp_dir + '/one')
+    discovered_pygit_repo_path = utils.find_pygit_repo()
+    assert os.path.abspath(discovered_pygit_repo_path) == os.path.abspath(self.pygit_repo_path)
 
-  os.makedirs(root_temp_dir + '/one/two/three')
-  os.makedirs(root_temp_dir + '/zero/minus_one/minus_two')
-  os.makedirs(root_temp_dir + '/zero/i')
-  os.makedirs(root_temp_dir + '/zero/reals')
-
-  return root_temp_dir
+  @with_setup(setup, teardown)
+  def test_find_non_existing_pygit_repo(self):
+    try:
+      os.chdir(self.root_temp_dir + '/zero/minus_one')
+      pygit_repo_path = utils.find_pygit_repo()
+    except utils.RepoNotFoundException:
+      assert True
